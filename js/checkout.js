@@ -74,21 +74,19 @@ jQuery(function($) {
                     // Optionally, clear the interval if no more polling is needed
                     clearInterval(pollingInterval);
                     fetchOrderId();
-                    $("#loader").show();  // Show the loader
-                    $('html, body').animate({
-                        scrollTop: $("#loader").offset().top
-                    }, 1000); // Adjust the duration (1000 ms here) as per your requirement
+                    // $("#loader").show();  // Show the loader
+                    // $('html, body').animate({
+                    //     scrollTop: $("#loader").offset().top
+                    // }, 1000); // Adjust the duration (1000 ms here) as per your requirement
                     $("button[name='woocommerce_checkout_place_order']").hide(); // Hide the button
                 }
             }
         });
     }
 
-
-
-var globalOrderId; // Global variable to store the order ID
-var globalCustomerTransId;
-var globalTotal;
+    var globalOrderId; // Global variable to store the order ID
+    var globalCustomerTransId;
+    var globalTotal;
     
     function fetchOrderId() {
         $.ajax({
@@ -177,7 +175,7 @@ function newtranscallcustomer(orderId, subtotal, tax, total) {
     // var total = '';
 
      // Construct the URL with the dynamic customerId
-     var url = "https://api.fintechwerx.com/ftw/public/MerchantCustomer/" + customerId + "/customertrans";
+     var url = "https://api-qa.fintechwerx.com/ftw/public/MerchantCustomer/" + customerId + "/customertrans";
 
 
      console.log("merchantId:",merchantId);
@@ -250,7 +248,7 @@ function loadIframe(customerTransId, total) {
 
     
         // Construct the dynamic iframe URL
-        var iframeUrl = "https://public-pay.fintechwerx.com/#/?customerId=" + customerId +
+        var iframeUrl = "https://qa-public-pay.fintechwerx.com/#/?customerId=" + customerId +
             "&ftwMerchantId=" + merchantId +
             "&CartOrderId=" + customerTransId +
             "&MobileNumber=" + customerMobileNumber +
@@ -267,6 +265,9 @@ function loadIframe(customerTransId, total) {
     console.log ("Customertransid:",customerTransId) ;
     console.log ("Customercountry:",customercountry) ;
 
+    // Flag to track if the iframe has loaded
+   // var paymentIframeLoaded = false;
+
     var iframe = $('<iframe>', {
         src: iframeUrl,
         id: 'paymentIframe',
@@ -274,6 +275,7 @@ function loadIframe(customerTransId, total) {
         scrolling: 'no',
         onload: function() {
             $("#loader").hide(); // Hide loader when iframe is loaded
+           // paymentIframeLoaded = true;
         }
     }).css({
         width: '100%',
@@ -339,6 +341,7 @@ function completePayment(paymentData) {
         },
         success: function(response) {
             if (response.success) {
+               // $("#loader").show();
                 window.location.href = response.data.redirect_url;
             } else {
                 // Log any error message returned from the server

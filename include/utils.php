@@ -1,6 +1,6 @@
 <?php
 
-$fintech_base_url = "api.fintechwerx.com" ;
+$fintech_base_url = "api-qa.fintechwerx.com" ;
 
 function get_customer_args($existing_customer_id, $customer_mobile_number, $merchandID, $cart_order_id, $order, $platform, $eCommWebsite){
    return [
@@ -164,7 +164,7 @@ function call_ftw_apipg() {
     }
   
 
-    $api_url = 'https://api.fintechwerx.com/ftw/public/merchant/get-merchant-subscription';
+    $api_url = 'https://api-qa.fintechwerx.com/ftw/public/merchant/get-merchant-subscription';
     $response = wp_remote_request($api_url, array(
         'method'    => 'POST',
         'headers'   => array('Content-Type' => 'application/json; charset=utf-8'),

@@ -4,7 +4,7 @@
 require_once( plugin_dir_path( __FILE__ ) . 'user-refund-process.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'merchantdashboard.php' );
 
-$fintech_base_url = "api.fintechwerx.com" ;
+$fintech_base_url = "api-qa.fintechwerx.com" ;
 
 // function my_woocommerce_admin_account_menu_items($adminitems) {
 //     if (current_user_can('administrator')) { // check if the current user is an administrator
