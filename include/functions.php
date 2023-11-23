@@ -554,7 +554,8 @@ function display_transaction_details_on_thankyou_page( $order_id ) {
         echo '<h2 class="woocommerce-order-details__title">Transaction Details ' . get_post_meta( $order->get_id(), 'Transaction ID', true ) . '</h2>';
       	echo '<ul class="woocommerce-order-overview woocommerce-thankyou-order-details order_details">';
         echo '<li class="woocommerce-order-overview__date date"><strong>Time Stamp: ' . date('Y-m-d H:i:s', $payment_gateway_response['paymentResponse']['timestamp']) . '</strong></li>';
-		echo '<li class="woocommerce-order-overview__payment-method method"><strong>Status: ' . $payment_gateway_response['paymentResponse']['verbiage'] . '</strong></li>';
+		//echo '<li class="woocommerce-order-overview__payment-method method"><strong>Status: ' . $payment_gateway_response['paymentResponse']['verbiage'] . '</strong></li>';
+        echo '<li class="woocommerce-order-overview__payment-method method"><strong>Status: APPROVED </strong></li>';
         echo '<li class="woocommerce-order-overview__order order"><strong>TTID: ' . $payment_gateway_response['paymentResponse']['txnId'] . '</strong></li>';
  		/* echo '<li class="woocommerce-order-overview__order order"><strong>Trans Status: ' . $transstatus . '</strong></li>';   
         echo '<li class="woocommerce-order-overview__order order"><strong>Trans Order ID: ' . $CartOrderIdtrans . '</strong></li>';  */

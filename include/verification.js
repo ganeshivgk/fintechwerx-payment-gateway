@@ -157,7 +157,7 @@
 
         // Function to open a popup
         var openPopup = function(ftwCustomerId) {
-            // var url = "https://widgetconsent.eldgr.com/?id=6&Rf=" + ftwCustomerId + "&IW=" + iframeWidth + "px" + "&IH=" + iframeHeight + "px";
+            // var url = "https://widgetconsent.eldgr.com/?id=2&Rf=" + ftwCustomerId + "&IW=" + iframeWidth + "px" + "&IH=" + iframeHeight + "px";
 
             // Container for the image
             var iframeContainer = document.createElement("div");
@@ -167,7 +167,7 @@
 
             // Create iframe initially without the IW and IH parameters in the URL
             var initialURL = "https://fincuro.9on.in/wp-content/uploads/2023/10/fintechwerx250by50forloading.png";
-            var urlWithoutDimensions = "https://widgetconsent.eldgr.com/?id=6&Rf=" + ftwCustomerId;
+            var urlWithoutDimensions = "https://widgetconsent.eldgr.com/?id=2&Rf=" + ftwCustomerId;
             var iframe = document.createElement("iframe");
             iframe.src = initialURL; // Set the initial URL
             iframe.id = "ageVerificationIframe";
@@ -400,7 +400,7 @@
         var verifyAge = function(ftwCustomerId, windowOpened) {
             $.ajax({
                 type: "POST",
-                url: "https://api.fintechwerx.com/ftw/public/merchant/get-merchant-subscription",
+                url: "https://api-qa.fintechwerx.com/ftw/public/merchant/get-merchant-subscription",
                 data: JSON.stringify({
                     "customerId": ftwCustomerId ,
                     "merchantId":  merchantId ,

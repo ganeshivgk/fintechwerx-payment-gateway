@@ -170,7 +170,7 @@ function fintechwerx_complete_order() {
 
            $order->add_order_note(
                 sprintf(
-                    __('Payment processed via My Payment Gateway. Transaction ID: %s', 'woocommerce'),
+                    __('Payment processed via FintechWerx Payment Gateway. Transaction ID: %s', 'woocommerce'),
                     $payment_data['paymentResponse']['txnId']
                 )
             );

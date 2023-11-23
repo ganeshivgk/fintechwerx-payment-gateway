@@ -177,7 +177,7 @@ function newtranscallcustomer(orderId, subtotal, tax, total) {
     // var total = '';
 
      // Construct the URL with the dynamic customerId
-     var url = "https://api.fintechwerx.com/ftw/public/MerchantCustomer/" + customerId + "/customertrans";
+     var url = "https://api-qa.fintechwerx.com/ftw/public/MerchantCustomer/" + customerId + "/customertrans";
 
 
      console.log("merchantId:",merchantId);
@@ -250,7 +250,7 @@ function loadIframe(customerTransId, total) {
 
     
         // Construct the dynamic iframe URL
-        var iframeUrl = "https://public-pay.fintechwerx.com/#/?customerId=" + customerId +
+        var iframeUrl = "https://qa-public-pay.fintechwerx.com/#/?customerId=" + customerId +
             "&ftwMerchantId=" + merchantId +
             "&CartOrderId=" + customerTransId +
             "&MobileNumber=" + customerMobileNumber +
