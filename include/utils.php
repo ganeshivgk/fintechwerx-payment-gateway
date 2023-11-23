@@ -1,6 +1,6 @@
 <?php
 
-$fintech_base_url = "api-qa.fintechwerx.com" ;
+$fintech_base_url = "api.fintechwerx.com" ;
 
 function get_customer_args($existing_customer_id, $customer_mobile_number, $merchandID, $cart_order_id, $order, $platform, $eCommWebsite){
    return [
@@ -129,86 +129,6 @@ function verify_customer_age($customerId, $merchantId, $customerEmail, $first_na
 }
 
 
-
-/* function call_ftw_apipg() {
-    $user_id = get_current_user_id();
-   
-    $customer = new WC_Customer($user_id);
-    $first_name = $customer->get_first_name();
-    $last_name = $customer->get_last_name();
-    $customer_mobile_number = $customer->get_billing_phone();
-    $customerEmail = $customer->get_email();
-  
-  
-    if ($user_id <= 0) {
-        return 'User not logged in'; // Or handle this case as you see fit
-    }
-  
-    $ftwCustomerId = get_user_meta($user_id, 'ftwCustomerId', true);
-  
-    if (empty($ftwCustomerId)) {
-        $customerId = $user_id;
-    } else {
-        $customerId = $ftwCustomerId;
-    }
-  
-    $merchantId = get_option('payment_plugin_merchantId');
-    $platform = get_option('payment_plugin_platform');
-    $eCommWebsite = get_option('payment_plugin_eCommWebsite');
-  
-    if(empty($merchantId)){
-      echo '<script type="text/javascript">
-          jQuery(function($) {
-              $("body").append("<div id=\'merchantError\' style=\'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); color: #fff; display: flex; align-items: center; justify-content: center; z-index: 99999;\'>Merchant ID is not updated by admin.<br/><button id=\'okMerchantErrorButton\'>OK</button></div>");
-  
-              $("#okMerchantErrorButton").on("click", function() {
-                  window.location.href = "' . wc_get_cart_url() . '";
-              });
-          });
-      </script>';
-      return;
-  }
-
-
-    $api_url = 'https://api-qa.fintechwerx.com/ftw/public/merchant/get-merchant-subscription';
-    $response = wp_safe_remote_post($api_url, array(
-        'headers'   => array('Content-Type' => 'application/json; charset=utf-8'),
-        'body'      => json_encode(array(
-            'customerId'        => $customerId,
-            'merchantId'        => $merchantId,
-            'customerEmail'     => $customerEmail,
-            'customerFirstName' => $first_name,
-            'customerLastName'  => $last_name,
-            'platform'          => $platform,
-            'eCommWebsite'      => $eCommWebsite,
-            'mobileNumber'      => $customer_mobile_number // Replace with actual mobile number
-        )),
-        'method'    => 'POST',
-        'data_format' => 'body',
-        'timeout' => 15 ,
-    )); 
-  
-    if (is_wp_error($response)) {
-      error_log('FTW API Error: ' . $response->get_error_message());  // Optional: Log the error
-      return $response->get_error_message();
-    }
-  
-    $body = wp_remote_retrieve_body($response);
-    $data = json_decode($body, true);
-  
-    if (!is_array($data) || !isset($data['ageVerificationResponse'])) {
-        error_log('Unexpected FTW API Response: ' . $body);  // Optional: Log the unexpected response
-        return 'Unexpected API response';
-    }
-  
-    if (!empty($data['ageVerificationResponse']['ftwCustomerId']) && empty($ftwCustomerId)) {
-        update_user_meta($user_id, 'ftwCustomerId', sanitize_text_field($data['ageVerificationResponse']['ftwCustomerId']));
-    }
-  
-  return $data;
-} */
-
-
 function call_ftw_apipg() {
     $user_id = get_current_user_id();
    
@@ -244,7 +164,7 @@ function call_ftw_apipg() {
     }
   
 
-    $api_url = 'https://api-qa.fintechwerx.com/ftw/public/merchant/get-merchant-subscription';
+    $api_url = 'https://api.fintechwerx.com/ftw/public/merchant/get-merchant-subscription';
     $response = wp_remote_request($api_url, array(
         'method'    => 'POST',
         'headers'   => array('Content-Type' => 'application/json; charset=utf-8'),

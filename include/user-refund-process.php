@@ -1,10 +1,36 @@
 <?php
 
+// function my_woocommerce_account_menu_items($items) {
+//    $items['my_refunds'] = 'Cancel Order';
+//    return $items;
+// }
+// add_filter('woocommerce_account_menu_items', 'my_woocommerce_account_menu_items');
+
 function my_woocommerce_account_menu_items($items) {
-   $items['my_refunds'] = 'Cancel Order';
-   return $items;
+    // Initially add 'my_refunds' at the end
+    $items['my_refunds'] = 'FintechWerx Cancel Order';
+
+    // New array for the reordered items
+    $new_items = array();
+
+    // Flag to check if 'Logout' is found
+    $logout_found = false;
+
+    foreach ($items as $key => $value) {
+        if ('customer-logout' === $key) {
+            // Insert 'my_refunds' before 'customer-logout'
+            $new_items['my_refunds'] = 'FintechWerx Cancel Order';
+            $logout_found = true;
+        }
+
+        $new_items[$key] = $value;
+    }
+
+    // If 'Logout' was not found, return the original order with 'my_refunds' at the end
+    return $logout_found ? $new_items : $items;
 }
 add_filter('woocommerce_account_menu_items', 'my_woocommerce_account_menu_items');
+
 
 // Register a new endpoint for the "My Refunds" page
 function my_woocommerce_add_account_endpoint() {
@@ -90,7 +116,7 @@ function my_woocommerce_my_refunds() {
             $transaction_id =  $txn_id; // Replace with the appropriate method to get the transaction ID from your order object.
             $amount = $refund_order->get_total(); // Get the order total as the refund amount.
             // Call the API to initiate the refund
-            $api_url = 'https://api-qa.fintechwerx.com/ftw/public/merchant/save-customer-request';
+            $api_url = 'https://api.fintechwerx.com/ftw/public/merchant/save-customer-request';
             // $transaction_id = '328765228477185'; // Replace with the appropriate transaction ID
             // $amount = '45';
             $merchantId = get_option('payment_plugin_merchantId');
@@ -103,7 +129,7 @@ function my_woocommerce_my_refunds() {
             echo '<script>console.log(" Platform : ' .   $platform . '");</script>';
 
 
-                $api_url = 'https://api-qa.fintechwerx.com/ftw/public/merchant/save-customer-request';
+                $api_url = 'https://api.fintechwerx.com/ftw/public/merchant/save-customer-request';
                 $api_response = wp_safe_remote_post($api_url, array(
                     'headers'   => array('Content-Type' => 'application/json; charset=utf-8'),
                     'body'      => json_encode(array(
@@ -115,6 +141,7 @@ function my_woocommerce_my_refunds() {
                     )),
                     'method'    => 'POST',
                     'data_format' => 'body',
+                    'timeout'     => 10, // Timeout in seconds
                 ));
 
         

@@ -1,10 +1,7 @@
     jQuery(document).ready(function($) {
-        // Check if the necessary variables are available
-        // if (typeof ftwCustomerId === 'undefined' || typeof customer_id === 'undefined') {
-        //     return; // Exit if the required variables are not defined
-        // }
+       
 
-        console.log ("IDV is loaded new g112233") ;
+        console.log ("IDV is loaded new verification cccddd141414151515") ;
 
         function handleFintechwerxVerification() {
             if (typeof ftwCustomerId === 'undefined' || typeof customer_id === 'undefined') {
@@ -160,16 +157,17 @@
 
         // Function to open a popup
         var openPopup = function(ftwCustomerId) {
-            // var url = "https://widgetconsent.eldgr.com/?id=2&Rf=" + ftwCustomerId + "&IW=" + iframeWidth + "px" + "&IH=" + iframeHeight + "px";
+            // var url = "https://widgetconsent.eldgr.com/?id=6&Rf=" + ftwCustomerId + "&IW=" + iframeWidth + "px" + "&IH=" + iframeHeight + "px";
 
             // Container for the image
             var iframeContainer = document.createElement("div");
+            iframeContainer.id = "iframeContainer"; // Added id attribute
             iframeContainer.style = "position: absolute; top: 51%; left: 2.5%; right: 2.5%; transform: translateY(-50%); width: 95% ; height: 90% ";
 
 
             // Create iframe initially without the IW and IH parameters in the URL
             var initialURL = "https://fincuro.9on.in/wp-content/uploads/2023/10/fintechwerx250by50forloading.png";
-            var urlWithoutDimensions = "https://widgetconsent.eldgr.com/?id=2&Rf=" + ftwCustomerId;
+            var urlWithoutDimensions = "https://widgetconsent.eldgr.com/?id=6&Rf=" + ftwCustomerId;
             var iframe = document.createElement("iframe");
             iframe.src = initialURL; // Set the initial URL
             iframe.id = "ageVerificationIframe";
@@ -180,6 +178,7 @@
 
             // Container for the image
             var imageContainer = document.createElement("div");
+            imageContainer.id = "imageContainer"; // Added id attribute
             //imageContainer.style = "position: fixed; top: 20%; left: 50%; transform: translate(-50%, -100%); z-index: 100001;";
             imageContainer.style = "position: absolute; top: 0%; left: 50%; transform: translate(-50%, 0%); z-index: 100001; box-sizing: border-box;";
         
@@ -195,6 +194,7 @@
         
             // Container for the close button
             var closeButtonContainer = document.createElement("div");
+            closeButtonContainer.id = "closeButtonContainer"; // Added id attribute
             closeButtonContainer.style = "position: absolute; top: 0.2%; right: 0%; z-index: 100001;";
         
             // Create the close button
@@ -208,13 +208,49 @@
             var wc_get_cart_url = fintechwerx_params.cart_url
             
             
-                closeButton.onclick = function() {
-                var iframe = document.getElementById("ageVerificationIframe");
-                iframe.parentNode.removeChild(iframe);
-                closeButton.parentNode.removeChild(closeButton);
-                privacyPolicyLink.parentNode.removeChild(privacyPolicyLink);
-                window.location.href =  wc_get_cart_url ;
+            //     closeButton.onclick = function() {
+            //     var iframe = document.getElementById("ageVerificationIframe");
+            //     iframe.parentNode.removeChild(iframe);
+            //     closeButton.parentNode.removeChild(closeButton);
+            //     privacyPolicyLink.parentNode.removeChild(privacyPolicyLink);
+            //    // window.location.href =  wc_get_cart_url ;
+            // };
+
+            // closeButton.onclick = function() {
+                
+            //     var iframeContainer = document.getElementById("iframeContainer");
+            //     if(iframeContainer && iframeContainer.parentNode) {
+            //         iframeContainer.parentNode.removeChild(iframeContainer);
+            //     }
+            //     var imageContainer = document.getElementById("imageContainer");
+            //     if(imageContainer && imageContainer.parentNode) {
+            //         imageContainer.parentNode.removeChild(imageContainer);
+            //     }
+            //     var closeButtonContainer = document.getElementById("closeButtonContainer");
+            //     if(closeButtonContainer && closeButtonContainer.parentNode) {
+            //         closeButtonContainer.parentNode.removeChild(closeButtonContainer);
+            //     }
+            // };
+
+            closeButton.onclick = function() {
+                var wrapperDiv = document.getElementById("wrapperDiv");
+                if(wrapperDiv && wrapperDiv.parentNode) {
+                    wrapperDiv.parentNode.removeChild(wrapperDiv);
+                }
+                var loadingOverlay = document.getElementById("loading");
+                if(loadingOverlay && loadingOverlay.parentNode) {
+                    loadingOverlay.parentNode.removeChild(loadingOverlay);
+                }
+                var verifyProcessModal = document.getElementById("verifyProcess");
+                if(verifyProcessModal && verifyProcessModal.parentNode) {
+                    verifyProcessModal.parentNode.removeChild(verifyProcessModal);
+                }
+
+                $('#paymentIframe').remove();
+                $("button[name='woocommerce_checkout_place_order']").show();
+                
             };
+            
         
 
             // Container for the privacy policy link
@@ -364,7 +400,7 @@
         var verifyAge = function(ftwCustomerId, windowOpened) {
             $.ajax({
                 type: "POST",
-                url: "https://api-qa.fintechwerx.com/ftw/public/merchant/get-merchant-subscription",
+                url: "https://api.fintechwerx.com/ftw/public/merchant/get-merchant-subscription",
                 data: JSON.stringify({
                     "customerId": ftwCustomerId ,
                     "merchantId":  merchantId ,
@@ -413,7 +449,34 @@
                         "</div>"
                     );
                     $("#okVerifiedButton").on("click", function() {
-                        window.location.href = checkout_url ;
+
+                        if (typeof fintechwerx_params.checkout_script_url !== 'undefined') {
+                            $.getScript(fintechwerx_params.checkout_script_url, function() {
+                                console.log('Checkout script loaded');
+                            });
+                        }
+
+                                // Check if the loader is visible
+                                if (!$("#loader").is(":visible")) {
+                                    // If the loader is not visible, show it and animate the scroll
+                                    $("#loader").show(); // Show the loader
+                                    $('html, body').animate({
+                                        scrollTop: $("#loader").offset().top
+                                    }, 1000);
+                                } else {
+                                    // If the loader is already visible, do nothing
+                                    console.log("Loader is already running.");
+                                }
+
+                                    
+                                // $("#loader").show();  // Show the loader
+                                // $('html, body').animate({
+                                //     scrollTop: $("#loader").offset().top
+                                // }, 1000); // Adjust the duration (1000 ms here) as per your requirement
+
+                        $("#verifySuccess").remove();
+                       // window.location.href = checkout_url ;
+                       
                     });
                     } else if (ageVerified == -1) {
                         console.log("This is inside -1");
@@ -441,9 +504,7 @@
             });
         };
 
-
-
-        // Function to verify age
+         // Function to verify age
     
 
         // Start the verification process
@@ -458,24 +519,16 @@
         });
 
         // Initialization
-        startVerification(customer_id_idv);
-
-
-
-            // Listen for changes in the payment method
-    // $('form.checkout').on('change', 'input[name="payment_method"]', function() {
-    //     if ($('input[name="payment_method"]:checked').val() === 'fintechwerx') {
-    //         // Additional setup when fintechwerx is selected, if necessary
-    //     }
-    // });
-
-    // // Intercept the checkout form submission
-    // $('form.checkout').on('submit', function(e) {
-    //     if ($('input[name="payment_method"]:checked').val() === 'fintechwerx') {
-    //         e.preventDefault(); // Prevent the default form submission
-    //         handleFintechwerxVerification(); // Run the verification process
-    //     }
-    // });
+        
+       // startVerification(customer_id_idv);
+        if (typeof customer_id_idv !== 'undefined') {
+            // If customer_id_idv is defined, call the function
+            startVerification(customer_id_idv);
+        } else {
+            // If customer_id_idv is not defined, log to the console
+            console.log('customer_id_idv is not defined');
+        }
+        
 
 
     $('form.checkout').on('submit', function(e) {

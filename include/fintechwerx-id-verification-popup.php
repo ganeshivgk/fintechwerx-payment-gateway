@@ -1,25 +1,6 @@
 <?php
 require_once(plugin_dir_path(__FILE__) . 'utils.php');
 
-// function enqueue_scripts_styles() {
-//     wp_enqueue_script('jquery-ui-dialog');
-//     wp_enqueue_style('wp-jquery-ui-dialog');
-//     // Enqueue your own stylesheet, adjust the path as needed
-//     // wp_enqueue_style('my_plugin_css', plugins_url('styles.css', __FILE__));
-
-//     // Enqueue the JavaScript file
-//     wp_enqueue_script('verification_js', plugins_url('verification.js', __FILE__), array('jquery'), null, true);
-
-//     // Pass PHP variables to JavaScript
-//     wp_localize_script('verification_js', 'verificationParams', array(
-//         'ajax_url' => admin_url('admin-ajax.php'),
-//         'checkout_url' => wc_get_checkout_url(),
-//         'cart_url' => wc_get_cart_url(),
-//         // Add other parameters as needed
-//     ));
-// }
-// add_action('wp_enqueue_scripts', 'enqueue_scripts_styles');
-
 add_action('wp_footer', 'age_verification');
 
 function age_verification() {
@@ -60,11 +41,48 @@ function age_verification() {
 
         if ($apiResponse['idvAge'] !== true) {
             echo "<script>window.location.href = '" . wc_get_checkout_url() . "?age_verified=0';</script>";
+            // echo "
+            // <script type='text/javascript'>
+            //     if (typeof fintechwerx_params !== 'undefined' && typeof fintechwerx_params.checkout_script_url !== 'undefined') {
+            //         $.getScript(fintechwerx_params.checkout_script_url, function() {
+            //             console.log('Checkout script loaded');
+            //         });
+            //     }
+            // </script>";
             return;
         }
 
-       // $checkout_url = wc_get_checkout_url() . "?age_verified=1";
-        $checkout_url = wc_get_checkout_url() ;
+        
+
+        // if ($apiResponse['idvAge'] !== true) {
+        //     echo "
+        //     <script type='text/javascript'>
+        //         console.log('fintechwerx_params:', typeof fintechwerx_params);
+        //         if (fintechwerx_params && fintechwerx_params.checkout_script_url) {
+        //             console.log('Loading script:', fintechwerx_params.checkout_script_url);
+        //             $.getScript(fintechwerx_params.checkout_script_url, function() {
+        //                 console.log('Checkout script loaded');
+        //                 window.location.href = '" . wc_get_checkout_url() . "?age_verified=0';
+        //             });
+        //         } else {
+        //             console.log('Redirecting immediately');
+        //             window.location.href = '" . wc_get_checkout_url() . "?age_verified=0';
+        //         }
+        //     </script>";
+        //     return;
+        // }
+        
+        
+
+        $checkout_url = wc_get_checkout_url() . "?age_verified=1";
+        // echo "
+        // <script type='text/javascript'>
+        //     if (typeof fintechwerx_params !== 'undefined' && typeof fintechwerx_params.checkout_script_url !== 'undefined') {
+        //         $.getScript(fintechwerx_params.checkout_script_url, function() {
+        //             console.log('Checkout script loaded');
+        //         });
+        //     }
+        // </script>";
 
         // JavaScript variables to be passed
         echo "

@@ -63,6 +63,7 @@ function fintechwerx_enqueue_scripts() {
 
     if (is_checkout()) {
         // Enqueue the script for gateway detection
+        echo "<script> console.log('this is the test inside checkout new tow three') </script>";
         wp_enqueue_script('fintechwerx-gateway-detection', plugin_dir_url(__FILE__) . 'js/fintechwerx-gateway-detection.js', array('jquery'), '1.0.0', true);
 
         // Prepare the URL for 'checkout.js' but don't enqueue it yet
@@ -88,48 +89,7 @@ function fintechwerx_enqueue_scripts() {
         ));
     }
 
-   
-
-
-        // if (is_checkout_pay_page()) {
-        //     global $wp;
-        //     $order_id = absint($wp->query_vars['order-pay']);
-        //     $order = wc_get_order($order_id);
-            
-        // } elseif (is_checkout()) {
-           
-        //     $order_id = $woocommerce->session->get('order_awaiting_payment');
-        //     // Enqueue the script but localize with data that doesn't include the order ID
-        //     // You might handle the order ID via AJAX after the order is created
-        // }
-
-
-                
-               
-
-                // // Check if customer mobile number is not set
-                //     if (empty($customer_mobile_number)) {
-                //         // Enqueue your custom JavaScript file (if not already enqueued)
-                //         wp_enqueue_script('custom-popup-script', plugin_dir_url(__FILE__) . 'js/custom-popup.js', array('jquery'), '1.0.0', true);
-
-                //         // Localize the script with necessary data
-                //         wp_localize_script('custom-popup-script', 'popup_params', array(
-                //             'billing_phone' => $customer->get_billing_phone(),
-                //             // Add any other data you might need in your JavaScript
-                            
-                //         ));
-                //     } else {
-                //         // Your existing code for enqueueing 'fintechwerx-checkout' script
-                //         wp_enqueue_script('fintechwerx-checkout', plugin_dir_url(__FILE__) . 'js/checkout.js', array('jquery'), '1.0.0', true);
-
-               
-                //     wp_localize_script('fintechwerx-checkout', 'fintechwerx_params', array(
-                     
-
-                //     ));
-                //     }
-
-         
+          
     
 }
 add_action('wp_enqueue_scripts', 'fintechwerx_enqueue_scripts');
@@ -208,9 +168,7 @@ function fintechwerx_complete_order() {
         // we received the payment
         $order->payment_complete();
 
-    //     $order->reduce_order_stock();
-    //     // some notes to customer (replace true with false to make it private)
-            $order->add_order_note(
+           $order->add_order_note(
                 sprintf(
                     __('Payment processed via My Payment Gateway. Transaction ID: %s', 'woocommerce'),
                     $payment_data['paymentResponse']['txnId']
@@ -220,25 +178,9 @@ function fintechwerx_complete_order() {
    
     //     // store the API response in the order meta
            update_post_meta($order_id, 'my_payment_gateway_response', $payment_data);
-    //     update_post_meta($order_id, 'my_payment_gateway_timestamp', $payment_gateway_response['paymentResponse']['timestamp']);
-    //     update_post_meta($order_id, 'my_payment_gateway_verbiage', $payment_gateway_response['paymentResponse']['verbiage']);
+
            update_post_meta($order_id, 'my_payment_gateway_txnId', $payment_gateway_response['paymentResponse']['txnId']);
-    //     update_post_meta($order_id, 'my_payment_gateway_transstatus', $transstatus);
-    //     update_post_meta($order_id, 'my_payment_gateway_CartOrderIdtrans', $CartOrderIdtrans);
-
-    //    // $order->add_order_note('Payment gateway response: ' . json_encode($paymentResponse));
-
-    //    $orderNote = "Card Number: $cardNumber\n"
-    //    . "Address Verification: $addressVerification\n"
-    //    . "Card Type: $cardType\n"
-    //    . "Timestamp: $timestamp\n"
-    //    . "Transaction ID: $txnId\n"
-    //    . "Verbiage2: $verbiage";
-
-    //      $order->add_order_note($orderNote);
-
-    //     // Empty cart
-    //     $woocommerce->cart->empty_cart();
+   
 
         // Redirect to the thank you page
         wp_send_json_success(array('redirect_url' => $order->get_checkout_order_received_url()));
@@ -384,9 +326,6 @@ function fintechwerx_payment_gateway_init() {
         }
 
         public function process_payment($order_id) {
-
-            //echo '<script>console.log("This is for testingorder id  " '.order_id.');</script>';
-           // echo '<script>console.log("This is for testing order id: ' . $order_id . '");</script>';
 
             WC()->session->set('payment_processed_flag', 'yes');
 

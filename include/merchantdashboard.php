@@ -32,7 +32,7 @@
 
     // URL for the iframe with the merchant ID
 
-    $iframe_url = "https://refunddetails-widget-qa.fintechwerx.com/#/?merchantId=$merchant_id";
+    $iframe_url = "https://refunddetails-widget.fintechwerx.com/#/?merchantId=$merchant_id";
 
 
 
@@ -58,7 +58,7 @@
 
 
 
-    echo '<style>.responsive-iframe { width: 100%; padding-bottom: 75%; position: relative; }</style>';
+    echo '<style>.responsive-iframe { width: 90%; padding-bottom: 75%; position: relative; }</style>';
 
 
 

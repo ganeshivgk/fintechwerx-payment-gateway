@@ -1,7 +1,12 @@
 jQuery(function($) {
     var pollingInterval;
 
-    console.log ("checkout js file is loaded new g987654") ;
+    console.log ("checkout js file is loaded new aaabbb121212") ;
+
+    if (!pollingInterval) {
+        pollingInterval = setInterval(pollForPaymentProcessed, 5000);
+      }
+
     $('form.checkout').on('checkout_place_order', function(e) {
 
         // Check if mandatory fields are filled
@@ -12,17 +17,27 @@ jQuery(function($) {
         }
 
         e.preventDefault();
-        $("#loader").show();  // Show the loader
-        $('html, body').animate({
-            scrollTop: $("#loader").offset().top
-        }, 1000); // Adjust the duration (1000 ms here) as per your requirement
+                // Check if the loader is visible
+            if (!$("#loader").is(":visible")) {
+                // If the loader is not visible, show it and animate the scroll
+                $("#loader").show(); // Show the loader
+                $('html, body').animate({
+                    scrollTop: $("#loader").offset().top
+                }, 1000);
+            } else {
+                // If the loader is already visible, do nothing
+                console.log("Loader is already running.");
+            }
+
+        // $("#loader").show();  // Show the loader
+        // $('html, body').animate({
+        //     scrollTop: $("#loader").offset().top
+        // }, 1000); // Adjust the duration (1000 ms here) as per your requirement
         $("button[name='woocommerce_checkout_place_order']").hide(); // Hide the button
         
       // fetchOrderId();
 
-       if (!pollingInterval) {
-        pollingInterval = setInterval(pollForPaymentProcessed, 5000);
-        }
+       
       // pollForPaymentProcessed();
        
     });
@@ -59,6 +74,11 @@ jQuery(function($) {
                     // Optionally, clear the interval if no more polling is needed
                     clearInterval(pollingInterval);
                     fetchOrderId();
+                    $("#loader").show();  // Show the loader
+                    $('html, body').animate({
+                        scrollTop: $("#loader").offset().top
+                    }, 1000); // Adjust the duration (1000 ms here) as per your requirement
+                    $("button[name='woocommerce_checkout_place_order']").hide(); // Hide the button
                 }
             }
         });
@@ -157,7 +177,7 @@ function newtranscallcustomer(orderId, subtotal, tax, total) {
     // var total = '';
 
      // Construct the URL with the dynamic customerId
-     var url = "https://api-qa.fintechwerx.com/ftw/public/MerchantCustomer/" + customerId + "/customertrans";
+     var url = "https://api.fintechwerx.com/ftw/public/MerchantCustomer/" + customerId + "/customertrans";
 
 
      console.log("merchantId:",merchantId);
@@ -230,7 +250,7 @@ function loadIframe(customerTransId, total) {
 
     
         // Construct the dynamic iframe URL
-        var iframeUrl = "https://qa-public-pay.fintechwerx.com/#/?customerId=" + customerId +
+        var iframeUrl = "https://public-pay.fintechwerx.com/#/?customerId=" + customerId +
             "&ftwMerchantId=" + merchantId +
             "&CartOrderId=" + customerTransId +
             "&MobileNumber=" + customerMobileNumber +
@@ -333,7 +353,6 @@ function completePayment(paymentData) {
         }
     });
 }
-
 
 });
 
