@@ -116,7 +116,7 @@ function my_woocommerce_my_refunds() {
             $transaction_id =  $txn_id; // Replace with the appropriate method to get the transaction ID from your order object.
             $amount = $refund_order->get_total(); // Get the order total as the refund amount.
             // Call the API to initiate the refund
-            $api_url = 'https://api-qa.fintechwerx.com/ftw/public/merchant/save-customer-request';
+            $api_url = 'https://api.fintechwerx.com/ftw/public/merchant/save-customer-request';
             // $transaction_id = '328765228477185'; // Replace with the appropriate transaction ID
             // $amount = '45';
             $merchantId = get_option('payment_plugin_merchantId');
@@ -129,7 +129,7 @@ function my_woocommerce_my_refunds() {
             echo '<script>console.log(" Platform : ' .   $platform . '");</script>';
 
 
-                $api_url = 'https://api-qa.fintechwerx.com/ftw/public/merchant/save-customer-request';
+                $api_url = 'https://api.fintechwerx.com/ftw/public/merchant/save-customer-request';
                 $api_response = wp_safe_remote_post($api_url, array(
                     'headers'   => array('Content-Type' => 'application/json; charset=utf-8'),
                     'body'      => json_encode(array(

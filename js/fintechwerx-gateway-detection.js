@@ -28,11 +28,11 @@ jQuery(document).ready(function($) {
             //     }
             // }
 
-            // if (typeof fintechwerx_params.checkout_script_url !== 'undefined') {
-            //     $.getScript(fintechwerx_params.checkout_script_url, function() {
-            //         console.log('Checkout script loaded');
-            //     });
-            // }
+            if (typeof fintechwerx_params.checkout_script_url !== 'undefined') {
+                $.getScript(fintechwerx_params.checkout_script_url, function() {
+                    console.log('Checkout script loaded');
+                });
+            }
         }
     }
 
