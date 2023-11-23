@@ -1,0 +1,22 @@
+/* Increase font size for the WooCommerce orders page */
+.post-type-shop_order .wp-list-table .order_date,
+.post-type-shop_order .wp-list-table .order_status,
+.post-type-shop_order .wp-list-table .order_title {
+    font-size: 26px; /* Adjust this value to your desired font size */
+}
+
+/* Increase font size for the WooCommerce orders page */
+.woocommerce-orders-table.woocommerce-MyAccount-orders.shop_table.shop_table_responsive.my_account_orders.account-orders-table .order_date,
+.woocommerce-orders-table.woocommerce-MyAccount-orders.shop_table.shop_table_responsive.my_account_orders.account-orders-table .order_status,
+.woocommerce-orders-table.woocommerce-MyAccount-orders.shop_table.shop_table_responsive.my_account_orders.account-orders-table .order_title {
+    font-size: 16px; /* Adjust this value to your desired font size */
+}
+
+.woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table
+{
+	 font-size: 16px;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-orders-table {
+    font-size: 20px;
+}

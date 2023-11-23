@@ -1,0 +1,31 @@
+.error {
+  border: 1px solid red;
+}
+
+.error:after {
+  content: attr(data-error);
+  color: red;
+  font-size: 12px;
+  display: block;
+  margin-top: 5px;
+}
+
+
+.message {
+  border: 1px solid red;
+}
+
+
+input#user_login, input#user_email {
+    font-size: 16px; /* adjust font size as needed */
+    font-weight: normal;
+}
+
+.order_details li strong {
+    font-size: 2.5em;
+}
+
+.woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table
+{
+	 font-size: 16px;
+}
