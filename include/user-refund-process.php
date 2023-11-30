@@ -1,11 +1,5 @@
 <?php
 
-// function my_woocommerce_account_menu_items($items) {
-//    $items['my_refunds'] = 'Cancel Order';
-//    return $items;
-// }
-// add_filter('woocommerce_account_menu_items', 'my_woocommerce_account_menu_items');
-
 function my_woocommerce_account_menu_items($items) {
     // Initially add 'my_refunds' at the end
     $items['my_refunds'] = 'FintechWerx Cancel Order';

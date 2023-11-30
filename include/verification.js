@@ -1,7 +1,7 @@
     jQuery(document).ready(function($) {
        
 
-        console.log ("IDV is loaded new verification cccddd141414151515") ;
+        console.log ("IDV is loaded new verification yyyyy112233") ;
 
         function handleFintechwerxVerification() {
             if (typeof ftwCustomerId === 'undefined' || typeof customer_id === 'undefined') {
@@ -140,24 +140,15 @@
             document.getElementsByTagName('head')[0].appendChild(style);
         };
 
-        // var showLoadingOverlay = function() {
-        //     // Loading overlay logic here
-        // };
-
-
+     
         var hideLoadingOverlay = function() {
             $("#loading").remove();
         };
 
 
-        // // Function to hide the loading overlay
-        // var hideLoadingOverlay = function() {
-        //     // Hide loading overlay logic here
-        // };
-
         // Function to open a popup
         var openPopup = function(ftwCustomerId) {
-            // var url = "https://widgetconsent.eldgr.com/?id=2&Rf=" + ftwCustomerId + "&IW=" + iframeWidth + "px" + "&IH=" + iframeHeight + "px";
+           
 
             // Container for the image
             var iframeContainer = document.createElement("div");
@@ -207,31 +198,6 @@
 
             var wc_get_cart_url = fintechwerx_params.cart_url
             
-            
-            //     closeButton.onclick = function() {
-            //     var iframe = document.getElementById("ageVerificationIframe");
-            //     iframe.parentNode.removeChild(iframe);
-            //     closeButton.parentNode.removeChild(closeButton);
-            //     privacyPolicyLink.parentNode.removeChild(privacyPolicyLink);
-            //    // window.location.href =  wc_get_cart_url ;
-            // };
-
-            // closeButton.onclick = function() {
-                
-            //     var iframeContainer = document.getElementById("iframeContainer");
-            //     if(iframeContainer && iframeContainer.parentNode) {
-            //         iframeContainer.parentNode.removeChild(iframeContainer);
-            //     }
-            //     var imageContainer = document.getElementById("imageContainer");
-            //     if(imageContainer && imageContainer.parentNode) {
-            //         imageContainer.parentNode.removeChild(imageContainer);
-            //     }
-            //     var closeButtonContainer = document.getElementById("closeButtonContainer");
-            //     if(closeButtonContainer && closeButtonContainer.parentNode) {
-            //         closeButtonContainer.parentNode.removeChild(closeButtonContainer);
-            //     }
-            // };
-
             closeButton.onclick = function() {
                 var wrapperDiv = document.getElementById("wrapperDiv");
                 if(wrapperDiv && wrapperDiv.parentNode) {
@@ -527,6 +493,11 @@
         } else {
             // If customer_id_idv is not defined, log to the console
             console.log('customer_id_idv is not defined');
+            if (typeof fintechwerx_params.checkout_script_url !== 'undefined') {
+                $.getScript(fintechwerx_params.checkout_script_url, function() {
+                    console.log('Checkout script loaded');
+                });
+            }
         }
         
 

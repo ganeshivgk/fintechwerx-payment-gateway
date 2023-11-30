@@ -1,7 +1,7 @@
 jQuery(function($) {
     var pollingInterval;
 
-    console.log ("checkout js file is loaded new aaabbb121212") ;
+    console.log ("checkout js file is loaded new gagaga112233") ;
 
     if (!pollingInterval) {
         pollingInterval = setInterval(pollForPaymentProcessed, 5000);
@@ -29,16 +29,10 @@ jQuery(function($) {
                 console.log("Loader is already running.");
             }
 
-        // $("#loader").show();  // Show the loader
-        // $('html, body').animate({
-        //     scrollTop: $("#loader").offset().top
-        // }, 1000); // Adjust the duration (1000 ms here) as per your requirement
+       
         $("button[name='woocommerce_checkout_place_order']").hide(); // Hide the button
         
-      // fetchOrderId();
-
-       
-      // pollForPaymentProcessed();
+    
        
     });
 
@@ -118,9 +112,7 @@ var globalTotal;
         });
     }
     
-    // Call this function at the appropriate time to fetch the order ID
-
-
+   
     function getOrderDetails(orderId) {
         $.ajax({
             url: fintechwerx_params.ajax_url, // Make sure this variable is correctly defined
@@ -164,17 +156,14 @@ function newtranscallcustomer(orderId, subtotal, tax, total) {
 
     
 
-   // var orderId = woocommerce_admin_meta_boxes.post_id;
-    
+  
     // Access the dynamic values passed from PHP
     var customerMobileNumber = fintechwerx_params.customer_mobile_number;
     var merchantId = fintechwerx_params.ftw_merchant_id;
     var platform = fintechwerx_params.platform;
     var eCommWebsite = fintechwerx_params.eCommWebsite;
     var customerId = fintechwerx_params.customer_id;
-    // var subtotal = '';
-    // var tax = '';
-    // var total = '';
+   
 
      // Construct the URL with the dynamic customerId
      var url = "https://api-qa.fintechwerx.com/ftw/public/MerchantCustomer/" + customerId + "/customertrans";
@@ -266,6 +255,8 @@ function loadIframe(customerTransId, total) {
     console.log ("ecomwebsite:",eCommWebsite) ;
     console.log ("Customertransid:",customerTransId) ;
     console.log ("Customercountry:",customercountry) ;
+	
+	
 
     var iframe = $('<iframe>', {
         src: iframeUrl,
@@ -274,10 +265,40 @@ function loadIframe(customerTransId, total) {
         scrolling: 'no',
         onload: function() {
             $("#loader").hide(); // Hide loader when iframe is loaded
+			 $('.blockUI').hide();
+			 $('.woocommerce.blockUI.blockOverlay').css({
+                'position': 'relative',
+                'display': 'none'
+            });
+			 $('.blockUI.blockOverlay').css({
+                'position': 'relative',
+                'display': 'none'
+            });
+			$('.checkout.woocommerce-checkout.processing').css({
+				'pointer-events': 'auto',
+			});
+			$('.checkout, .woocommerce-checkout, .processing').css({
+				'pointer-events': 'auto'
+			});
+			$('.woocommerce-checkout.processing iframe, .woocommerce-checkout.processing iframe *').css('pointer-events', 'auto');
+			$('.cart_totals.processing, .woocommerce-checkout.processing, .woocommerce-cart-form.processing, .woocommerce-mini-cart-item.processing').css({
+				'cursor': 'default', // Resets the cursor style
+				'opacity': '1',     // Resets opacity to full
+				'transition': 'none' // Removes the transition effect
+			});
+// 			.e-route-notes.e-route-notes--notable .elementor-element iframe {
+// 				pointer-events: auto;
+// 			}
+			// Unblock the UI
+       		 $.unblockUI();
+			//$('.your-blocking-class-name').css('display', 'none'); // Another way to hide
         }
     }).css({
         width: '100%',
-        height: '600px'
+        height: '600px',
+		position: 'relative', // Ensure the position is set
+        zIndex: 9999 , // High z-index to stay on top
+		'pointer-events': 'auto'
     });
 
     $('#fintechwerx-iframe-container').html(iframe);
@@ -302,7 +323,7 @@ function processIframeResponse(data) {
         completePayment(data);
     } else {
         console.log ("Inside the if of checking other than 200 status code ");
-        alert(' Please Try again , Note : ' + data.paymentResponse.verbiage);
+        alert(' Please Try again. \n Failure Reason: ' + data.paymentResponse.verbiage);
        
         loadIframe(globalCustomerTransId, globalTotal);
         // Handle payment failure

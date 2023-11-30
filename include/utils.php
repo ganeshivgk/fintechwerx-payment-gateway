@@ -111,7 +111,7 @@ function verify_customer_age($customerId, $merchantId, $customerEmail, $first_na
     if (is_wp_error($response)) {
         // Handle the error.
         $error_message = $response->get_error_message();
-        echo "Something went wrong: $error_message";
+        echo "Please Try again Later. \n Failure Reason : $error_message";
          echo '<script>console.log("This is for testing BEFORE ELSE ");</script>';
     } else {
         $body = wp_remote_retrieve_body($response);
@@ -131,6 +131,8 @@ function verify_customer_age($customerId, $merchantId, $customerEmail, $first_na
 
 function call_ftw_apipg() {
     $user_id = get_current_user_id();
+
+    echo '<script>console.log("This is for testing call ftw apipg one ");</script>';
    
     if ($user_id <= 0) {
         return 'User not logged in';
@@ -185,7 +187,34 @@ function call_ftw_apipg() {
         error_log('FTW API Error: ' . $response->get_error_message());
         return $response->get_error_message();
     }
-  
+
+    // Check if the response status code is not 200
+    $response_code = wp_remote_retrieve_response_code($response);
+    echo '<script>console.log("This is for testing call ftw apipg one before repobse  ");</script>';
+    // if ($response_code != 200) {
+    //     $error_message = wp_remote_retrieve_response_message($response);
+    //     echo "<script type='text/javascript'>
+    //             alert('Please Try again Later. \\n Failure Reason: " . esc_js($error_message) . "');
+    //           </script>";
+    //     return;
+    // }
+
+    // if ($response_code != 200) {
+    //     $body = wp_remote_retrieve_body($response);
+    //     $data = json_decode($body, true);
+    
+    //     if (is_array($data) && isset($data['message'])) {
+    //         $error_message = $data['message'];
+    //     } else {
+    //         $error_message = 'Unknown error occurred.';
+    //     }
+    
+    //     echo "<script type='text/javascript'>
+    //             alert('Please Try again Later. \\n Failure Reason: " . esc_js($error_message) . "');
+    //           </script>";
+    //     return;
+    // }
+
     $body = wp_remote_retrieve_body($response);
     $data = json_decode($body, true);
   
@@ -200,5 +229,6 @@ function call_ftw_apipg() {
   
     return $data;
 }
+
 
 

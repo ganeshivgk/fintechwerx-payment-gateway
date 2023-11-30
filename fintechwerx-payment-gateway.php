@@ -4,7 +4,7 @@
  * Plugin URI: https://fincuro.9on.in/
  * Description: Custom payment gateway with iframe integration.
  * Author: Team Fincuro
- * Version: 1.0
+ * Version: 1.0.101_Patch2
  */
 
 if (!defined('ABSPATH')) {
@@ -79,7 +79,11 @@ function fintechwerx_enqueue_scripts() {
             'ajax_url' => admin_url('admin-ajax.php'),
             //  'order_id' => $order_id, // Passing the order ID to the script
               'customer_id' => $ftwCustomerId,
+              'woocustomer_id' => $customer_id,
               'ftw_merchant_id' => $merchantId,
+              'firstnamewoo' => $first_name,
+              'lastnamewoo' => $last_name,
+                'wooemailid' => $customerEmail,
               'customer_mobile_number' => $customer_mobile_number,
               'platform' => $platform,
               'eCommWebsite' => $eCommWebsite,
@@ -164,7 +168,7 @@ function fintechwerx_complete_order() {
         // Change the order status to 'Processing'
         $order->update_status('processing', 'FintechWerx Payment Completed and Approved.');
 
-        //$order->update_status('processed', __('Payment received via My Payment Gateway.', 'woocommerce'));
+ 
         // we received the payment
         $order->payment_complete();
 
@@ -299,8 +303,10 @@ function fintechwerx_payment_gateway_init() {
         }
 
         public function payment_fields() {
-            echo '<div id="fintechwerx-iframe-container"></div>'; // Container for the iframe
+            echo '<div id="blockOverlay" style="display:none;"></div>';
+
             echo '<div id="loader" class="loader" ></div>
+            
                   <style>
                   .loader {
                     display: none;
@@ -316,12 +322,22 @@ function fintechwerx_payment_gateway_init() {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
                   }
+                  #blockOverlay {
+                    position: fixed; /* Positioned relative to the viewport */
+                    top: 0;
+                    left: 0;
+                    width: 100%; /* Full width */
+                    height: 100%; /* Full height */
+                    background-color: rgba(0, 0, 0, 0.3); /* Black background with opacity */
+                    z-index: 1000; /* Sit on top of other elements */
+                }
                   
                   </style>
  
             
             
             ';
+            echo '<div id="fintechwerx-iframe-container"></div>'; // Container for the iframe
             
         }
 

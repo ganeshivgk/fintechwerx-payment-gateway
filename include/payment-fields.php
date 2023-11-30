@@ -40,12 +40,7 @@ $customerId = $ftwCustomerId ? $ftwCustomerId : $user_id;
                 }
                     
             
-            //        $logo = $this->get_option('logo');
-              //      if ($logo) {
-              //          echo '<img src="' . esc_url($logo) . '" alt="Payment Gateway Logo" style="max-width: 20%; height: 20%;">';
-              //      }
-
-                // I will echo() the form, but you can close PHP tags and print it directly in HTML
+          
                 echo '<fieldset id="wc-' . esc_attr($this->id) . '-cc-form" class="wc-credit-card-form wc-payment-form" style="background:transparent;">';
 
        		     do_action('woocommerce_credit_card_form_start', $this->id);
