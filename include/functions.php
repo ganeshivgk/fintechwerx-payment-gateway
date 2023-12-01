@@ -536,30 +536,28 @@ function sync_billing_phone_to_checkout($customer, $data) {
 add_action('woocommerce_checkout_update_customer', 'sync_billing_phone_to_checkout', 10, 2);
 
 
-
-
 // Print thetransaction details on the checkout page
 
-add_action( 'woocommerce_thankyou', 'display_transaction_details_on_thankyou_page', 10, 1 );
-function display_transaction_details_on_thankyou_page( $order_id ) {
-    $order = wc_get_order( $order_id );
-     $customer_id = get_current_user_id();
-    $payment_gateway_response = get_post_meta( $order_id, 'fintechwerx_payment_data', true );
-    $transstatus = get_post_meta($order_id, 'my_payment_gateway_created', true);
-    $CartOrderIdtrans = get_post_meta($order_id, 'my_payment_gateway_changed', true);
-    $existing_customer_id = get_user_meta($customer_id, 'my_payment_gateway_customer_id', true);
+// add_action( 'woocommerce_thankyou', 'display_transaction_details_on_thankyou_page', 10, 1 );
+// function display_transaction_details_on_thankyou_page( $order_id ) {
+//     $order = wc_get_order( $order_id );
+//      $customer_id = get_current_user_id();
+//     $payment_gateway_response = get_post_meta( $order_id, 'fintechwerx_payment_data', true );
+//     $transstatus = get_post_meta($order_id, 'my_payment_gateway_created', true);
+//     $CartOrderIdtrans = get_post_meta($order_id, 'my_payment_gateway_changed', true);
+//     $existing_customer_id = get_user_meta($customer_id, 'my_payment_gateway_customer_id', true);
 
-    if ( $payment_gateway_response ) {
-      	echo '<img src="https://fincuro.9on.in/wp-content/uploads/2023/10/150-BY-70-LOGO.jpg" alt="Logo" />';
-        echo '<h2 class="woocommerce-order-details__title">Transaction Details ' . get_post_meta( $order->get_id(), 'Transaction ID', true ) . '</h2>';
-      	echo '<ul class="woocommerce-order-overview woocommerce-thankyou-order-details order_details">';
-        echo '<li class="woocommerce-order-overview__date date"><strong>Time Stamp: ' . date('Y-m-d H:i:s', $payment_gateway_response['paymentResponse']['timestamp']) . '</strong></li>';
-		echo '<li class="woocommerce-order-overview__payment-method method"><strong>Status: APPROVED </strong></li>';
-        echo '<li class="woocommerce-order-overview__order order"><strong>TTID: ' . $payment_gateway_response['paymentResponse']['txnId'] . '</strong></li>';
+//     if ( $payment_gateway_response ) {
+//       	echo '<img src="https://fincuro.9on.in/wp-content/uploads/2023/10/150-BY-70-LOGO.jpg" alt="Logo" />';
+//         echo '<h2 class="woocommerce-order-details__title">Transaction Details ' . get_post_meta( $order->get_id(), 'Transaction ID', true ) . '</h2>';
+//       	echo '<ul class="woocommerce-order-overview woocommerce-thankyou-order-details order_details">';
+//         echo '<li class="woocommerce-order-overview__date date"><strong>Time Stamp: ' . date('Y-m-d H:i:s', $payment_gateway_response['paymentResponse']['timestamp']) . '</strong></li>';
+// 		echo '<li class="woocommerce-order-overview__payment-method method"><strong>Status: APPROVED </strong></li>';
+//         echo '<li class="woocommerce-order-overview__order order"><strong>TTID: ' . $payment_gateway_response['paymentResponse']['txnId'] . '</strong></li>';
  		
-      	echo '</ul>';
-    }
-}
+//       	echo '</ul>';
+//     }
+// }
 
 
 function custom_order_processed($order_id) {

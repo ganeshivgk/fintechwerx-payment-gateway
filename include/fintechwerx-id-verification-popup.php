@@ -27,23 +27,7 @@ function age_verification() {
 
         $apiResponse = call_ftw_apipg();
 
-        // $response_code = wp_remote_retrieve_response_code($apiResponse);
-
-        // if ($response_code != 200) {
-        //     $body = wp_remote_retrieve_body($response);
-        //     $data = json_decode($body, true);
         
-        //     if (is_array($data) && isset($data['message'])) {
-        //         $error_message = $data['message'];
-        //     } else {
-        //         $error_message = 'Unknown error occurred.';
-        //     }
-        
-        //     echo "<script type='text/javascript'>
-        //             alert('Please Try again Later. \\n Failure Reason: " . esc_js($error_message) . "');
-        //           </script>";
-        //     return;
-        // }
 
         if (isset($apiResponse['error'])) {
             echo "Something went wrong: " . $apiResponse['error'];

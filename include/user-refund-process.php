@@ -110,7 +110,7 @@ function my_woocommerce_my_refunds() {
             $transaction_id =  $txn_id; // Replace with the appropriate method to get the transaction ID from your order object.
             $amount = $refund_order->get_total(); // Get the order total as the refund amount.
             // Call the API to initiate the refund
-            $api_url = 'https://api-qa.fintechwerx.com/ftw/public/merchant/save-customer-request';
+            $api_url = 'https://api.fintechwerx.com/ftw/public/merchant/save-customer-request';
             // $transaction_id = '328765228477185'; // Replace with the appropriate transaction ID
             // $amount = '45';
             $merchantId = get_option('payment_plugin_merchantId');
@@ -123,7 +123,7 @@ function my_woocommerce_my_refunds() {
             echo '<script>console.log(" Platform : ' .   $platform . '");</script>';
 
 
-                $api_url = 'https://api-qa.fintechwerx.com/ftw/public/merchant/save-customer-request';
+                $api_url = 'https://api.fintechwerx.com/ftw/public/merchant/save-customer-request';
                 $api_response = wp_safe_remote_post($api_url, array(
                     'headers'   => array('Content-Type' => 'application/json; charset=utf-8'),
                     'body'      => json_encode(array(
@@ -135,7 +135,7 @@ function my_woocommerce_my_refunds() {
                     )),
                     'method'    => 'POST',
                     'data_format' => 'body',
-                    'timeout'     => 10, // Timeout in seconds
+                    'timeout'     => 15, // Timeout in seconds
                 ));
 
         
@@ -166,15 +166,25 @@ function my_woocommerce_my_refunds() {
     ));
 
     // Display the orders in a table
-    echo '<table>';
-  	   	echo '
-        	 <tr>
-      <th>Order ID</th>
-      <th>Order Total</th>
-      <th>Order Date</th>
-      <th>Transaction ID</th>
-      <th>Refund Status</th>
-    </tr>
+    // echo '<table>';
+  	//    	echo '
+    //     	 <tr>
+    //   <th>Order ID</th>
+    //   <th>Order Total</th>
+    //   <th>Order Date</th>
+    //   <th>Transaction ID</th>
+    //   <th>Refund Status</th>
+    // </tr>
+    //     ';
+
+        echo '<table>';
+        echo '
+                <tr>
+        <th>Order ID</th>
+        <th>Order Total</th>
+        <th>Order Date</th>
+        <th>Refund Status</th>
+        </tr>
         ';
     foreach ($orders as $order) {
         $order_id = $order->get_id();
@@ -190,7 +200,7 @@ function my_woocommerce_my_refunds() {
 
         $is_refunded = $order->get_status() === 'refunded' ? 'Refunded' : '<button onclick="processRefund(' . $order_id . ')">Cancel</button>';
    
-        echo "<tr><td>{$order_id}</td><td>{$order_total}</td><td>{$order_date}</td><td>{$txn_id}</td><td>{$is_refunded}</td></tr>";
+        echo "<tr><td>{$order_id}</td><td>{$order_total}</td><td>{$order_date}</td><td>{$is_refunded}</td></tr>";
     }
     echo '</table>';
 

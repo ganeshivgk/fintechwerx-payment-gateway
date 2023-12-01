@@ -4,7 +4,7 @@
  * Plugin URI: https://fincuro.9on.in/
  * Description: Custom payment gateway with iframe integration.
  * Author: Team Fincuro
- * Version: 1.0.101_Patch2
+ * Version: 1.1.0 Patch 3
  */
 
 if (!defined('ABSPATH')) {
@@ -106,6 +106,71 @@ function check_payment_processed_flag() {
 add_action('wp_ajax_check_payment_processed', 'check_payment_processed_flag');
 add_action('wp_ajax_nopriv_check_payment_processed', 'check_payment_processed_flag');
 
+function enqueue_admin_scripts() {
+    wp_enqueue_script('my-plugin-script', plugins_url('/js/admin-script.js', __FILE__), array('jquery'));
+}
+add_action('admin_enqueue_scripts', 'enqueue_admin_scripts');
+
+
+add_filter('woocommerce_admin_settings_sanitize_option_neweCommWebsite', 'validate_neweCommWebsite_field', 10, 3);
+
+function validate_neweCommWebsite_field($value, $option, $raw_value) {
+    // Remove http and https from the site URL for comparison
+    $site_url_without_protocol = str_replace(array('http://', 'https://'), '', get_site_url());
+
+    // Remove http and https from the entered URL
+    $entered_url_without_protocol = str_replace(array('http://', 'https://'), '', $raw_value);
+
+    if ($entered_url_without_protocol !== $site_url_without_protocol) {
+        // Add an error message if the URLs do not match
+        WC_Admin_Settings::add_error(__('The entered URL does not match the site URL.', 'woocommerce'));
+        return $option['default']; // Return default or any other fallback value
+    }
+
+    return $raw_value; // Return the validated value
+}
+
+
+// Hook for authenticated users
+add_action('wp_ajax_check_existing_cart_order_id', 'check_existing_cart_order_id_callback');
+
+// Hook for unauthenticated users
+add_action('wp_ajax_nopriv_check_existing_cart_order_id', 'check_existing_cart_order_id_callback');
+
+function check_existing_cart_order_id_callback() {
+    $orderId = isset($_POST['order_id']) ? intval($_POST['order_id']) : 0;
+
+    // Check for existing CartOrderId
+    $cartOrderId = get_post_meta($orderId, 'cart_order_id_meta_key', true); // Replace 'cart_order_id_meta_key' with your actual meta key
+
+    if (!empty($cartOrderId)) {
+        wp_send_json_success(['exists' => true, 'cartOrderId' => $cartOrderId]);
+    } else {
+        wp_send_json_success(['exists' => false]);
+    }
+
+    wp_die(); // this is required to terminate immediately and return a proper response
+}
+
+// Hook for authenticated users
+add_action('wp_ajax_save_cart_order_id', 'save_cart_order_id_callback');
+
+// Hook for unauthenticated users
+add_action('wp_ajax_nopriv_save_cart_order_id', 'save_cart_order_id_callback');
+
+function save_cart_order_id_callback() {
+    $orderId = isset($_POST['order_id']) ? intval($_POST['order_id']) : 0;
+    $cartOrderId = isset($_POST['cart_order_id']) ? sanitize_text_field($_POST['cart_order_id']) : '';
+
+    if (!empty($orderId) && !empty($cartOrderId)) {
+        update_post_meta($orderId, 'cart_order_id_meta_key', $cartOrderId); // Replace 'cart_order_id_meta_key' with your actual meta key
+        wp_send_json_success();
+    } else {
+        wp_send_json_error('Invalid Order ID or Cart Order ID');
+    }
+
+    wp_die(); // this is required to terminate immediately and return a proper response
+}
 
 
 
@@ -272,14 +337,14 @@ function fintechwerx_payment_gateway_init() {
                 'platform' => array(
                     'title' => __('Platform', 'woocommerce'),
                     'type' => 'text',
-                    'description' => __('Enter your merchant ID', 'woocommerce'),
-                    'default' => '',
+                    'description' => __('Enter your Platform', 'woocommerce'),
+                    'default' => 'woocommerce',
                     'desc_tip' => true,
                 ),
                 'eCommWebsite' => array(
                     'title' => __('Website URL', 'woocommerce'),
                     'type' => 'text',
-                    'description' => __('Enter your merchant ID', 'woocommerce'),
+                    'description' => __('Enter your Website URL', 'woocommerce'),
                     'default' => '',
                     'desc_tip' => true,
                 ),
@@ -289,16 +354,7 @@ function fintechwerx_payment_gateway_init() {
                     'label' => __('Enable adding login and registration links to the menu', 'woocommerce'),
                     'default' => 'no', // set default to 'no' or 'yes' as required
                 ),
-                'logo' => array(
-                    'title' => __('Logo', 'woocommerce'),
-                    'type' => 'text',
-                    'description' => __('Enter the URL of your payment gateway logo', 'woocommerce'),
-                    'default' => 'https://fincuro.9on.in/wp-content/plugins/fincuro-payment-gateway/images/newfintechwerxpng.png',
-                    'desc_tip' => true,
-                    'custom_attributes' => array(
-                        'class' => 'hidden',
-                ),
-                ),
+                
             );
         }
 

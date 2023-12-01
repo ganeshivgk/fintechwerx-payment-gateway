@@ -329,7 +329,7 @@ echo '<div class="clear"></div></fieldset>';
                     
                                 $.ajax({
                                     type: "POST",
-                                    url: "https://api-qa.fintechwerx.com/ftw/public/merchant/get-merchant-subscription",
+                                    url: "https://api.fintechwerx.com/ftw/public/merchant/get-merchant-subscription",
                                     data: JSON.stringify({
                                         "customerId": "' . $customerId . '",
                                         "merchantId": "' . $merchantId . '",

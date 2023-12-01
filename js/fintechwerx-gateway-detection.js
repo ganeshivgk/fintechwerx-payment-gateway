@@ -4,7 +4,7 @@ jQuery(document).ready(function($) {
     
     function loadFintechwerxScripts() {
         if ($('#payment_method_' + fintechwerx_params.gateway_id).is(':checked')) {
-            console.log('Fintechwerx selected');
+            console.log('Fintechwerx selected inside loadfintechwerxscrips');
 
             // Load ID verification script
             if (typeof fintechwerx_params.idvwidget_script_url !== 'undefined') {
@@ -37,7 +37,7 @@ jQuery(document).ready(function($) {
 
 
         $.ajax({
-            url: 'https://api-qa.fintechwerx.com/ftw/public/merchant/get-merchant-subscription', // Replace with your API URL
+            url: 'https://api.fintechwerx.com/ftw/public/merchant/get-merchant-subscription', // Replace with your API URL
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -59,88 +59,31 @@ jQuery(document).ready(function($) {
             
                         if (xhr.status === 200) {
                             // Handle successful response
+
                             console.log('Successful response:', response);
                             loadFintechwerxScripts();
                             // Further handling based on response content
                         } else if (response.code === 1014) {
                             // Handle specific error scenario
-                            alert('Error 1014: ' + response.message);
+                           // alert('Please try again: ' + response.message);
+                            alert('Payment Failed. \n Failure Reason: ' + response.message);
+                            window.location.reload();
                         } else if (response.code === 404) {
                             // Handle specific error scenario
-                            alert('Error 404: ' + response.message);
+                           // alert('Error 404: ' + response.message);
+                            alert('Payment Failed. \n Failure Reason: ' + response.message);
+                            window.location.reload();
                         } else {
                             // Handle other error scenarios
-                            alert('Error: ' + response.message);
+                           // alert('Error: ' + response.message);
+                            alert('Payment Failed. \n Failure Reason: ' + response.message);
+                            window.location.reload();
                         }
                     } catch (e) {
                         alert('An error occurred during the request.');
                     }
                 }
            
-            
-            // success: function(response) {
-            //     if(response.code === 200) {
-            //         // Handle success scenario
-            //         console.log('API check successful');
-            //         console.log('response from 200', response);
-                
-            //         // Load necessary scripts
-            //         loadFintechwerxScripts();
-            //         // Continue with form submission or other actions
-            //     } else if (response.code === 1014) {
-            //         // Handle specific scenario when response code is 1014
-            //         console.log('Specific failure with code 1014', response);
-            //         alert('Please Try again Later. \n Failure Reason: ' + response.message);
-                    
-            //     }  else if (response.code === 404) {
-            //         // Handle specific scenario when response code is 1014
-            //         console.log('Specific failure with code 1014', response);
-            //         alert('Please Try again Later. \n Failure Reason: ' + response.message);
-                    
-            //     } else {
-            //         // Handle other failure scenarios
-            //         console.log('response from else new', response);
-            //         loadFintechwerxScripts();
-            //         //alert('Please Try again Later. \n Failure Reason: ' + response.message);
-                    
-            //     }
-                
-            // },
-            // error: function(xhr, status, error) {
-
-            //     console.log('API check successful');
-            //     console.log('response from error before check', error);
-            //     // Handle error scenario
-
-            //     console.log('AJAX error occurred:', status, errorThrown);
-        
-            //     if(response.code === 200) {
-            //         // Handle success scenario
-            //         console.log('API check successful');
-            //         console.log('response from 200', error);
-                
-            //         // Load necessary scripts
-            //         loadFintechwerxScripts();
-            //         // Continue with form submission or other actions
-            //     } else if (response.code === 1014) {
-            //         // Handle specific scenario when response code is 1014
-            //         console.log('Specific failure with code 1014', error);
-            //         alert('Please Try again Later. \n Failure Reason: ' + error.message);
-                    
-            //     }  else if (response.code === 404) {
-            //         // Handle specific scenario when response code is 1014
-            //         console.log('Specific failure with code 404', error);
-            //         alert('Please Try again Later. \n Failure Reason: ' + error.message);
-                    
-            //     } else {
-            //         // Handle other failure scenarios
-            //         console.log('response from else', error);
-            //         alert('Please Try again Later. \n Failure Reason: ' + error.message);
-                    
-            //     }
-
-                
-            // }
         });
     }
 
@@ -161,3 +104,4 @@ jQuery(document).ready(function($) {
         }
     });
 });
+

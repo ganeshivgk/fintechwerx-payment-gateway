@@ -8,6 +8,15 @@
                 console.error("Required variables are not defined.");
                 return; // Exit if the required variables are not defined
             }
+
+            // Check if the iframe or the "Complete Payment" popup already exists
+            var iframeExists = document.getElementById("ageVerificationIframe") !== null;
+            var completePaymentPopupExists = document.getElementById("verifySuccess") !== null;
+
+            if (iframeExists || completePaymentPopupExists) {
+                console.log("Iframe or Complete Payment popup already exists. Skipping verification.");
+                return; // Exit the function if either element exists
+            }
     
             // Show loading overlay
             showLoadingOverlay();
@@ -148,6 +157,12 @@
 
         // Function to open a popup
         var openPopup = function(ftwCustomerId) {
+
+            // Check if the iframe already exists
+            if (document.getElementById("ageVerificationIframe")) {
+                console.log("Iframe already loaded. Not creating a new one.");
+                return; // Exit the function if the iframe already exists
+            }
            
 
             // Container for the image
@@ -158,7 +173,7 @@
 
             // Create iframe initially without the IW and IH parameters in the URL
             var initialURL = "https://fincuro.9on.in/wp-content/uploads/2023/10/fintechwerx250by50forloading.png";
-            var urlWithoutDimensions = "https://widgetconsent.eldgr.com/?id=2&Rf=" + ftwCustomerId;
+            var urlWithoutDimensions = "https://widgetconsent.eldgr.com/?id=6&Rf=" + ftwCustomerId;
             var iframe = document.createElement("iframe");
             iframe.src = initialURL; // Set the initial URL
             iframe.id = "ageVerificationIframe";
@@ -366,7 +381,7 @@
         var verifyAge = function(ftwCustomerId, windowOpened) {
             $.ajax({
                 type: "POST",
-                url: "https://api-qa.fintechwerx.com/ftw/public/merchant/get-merchant-subscription",
+                url: "https://api.fintechwerx.com/ftw/public/merchant/get-merchant-subscription",
                 data: JSON.stringify({
                     "customerId": ftwCustomerId ,
                     "merchantId":  merchantId ,
@@ -416,11 +431,13 @@
                     );
                     $("#okVerifiedButton").on("click", function() {
 
-                        if (typeof fintechwerx_params.checkout_script_url !== 'undefined') {
-                            $.getScript(fintechwerx_params.checkout_script_url, function() {
-                                console.log('Checkout script loaded');
-                            });
-                        }
+                        $("#verifySuccess").remove();
+
+                                if (typeof fintechwerx_params.checkout_script_url !== 'undefined') {
+                                    $.getScript(fintechwerx_params.checkout_script_url, function() {
+                                        console.log('Checkout script loaded');
+                                    });
+                                }
 
                                 // Check if the loader is visible
                                 if (!$("#loader").is(":visible")) {
@@ -429,9 +446,14 @@
                                     $('html, body').animate({
                                         scrollTop: $("#loader").offset().top
                                     }, 1000);
+                                    pollForPaymentProcessed();
                                 } else {
                                     // If the loader is already visible, do nothing
                                     console.log("Loader is already running.");
+                                    clearInterval(pollingInterval);
+                                    fetchOrderId();
+                                    $("#verifySuccess").remove();
+
                                 }
 
                                     

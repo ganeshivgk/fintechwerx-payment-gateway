@@ -1,20 +1,37 @@
-jQuery(function($) {
+(function($) {
+$(document).ready(function() {
+
     var pollingInterval;
 
-    console.log ("checkout js file is loaded new gagaga112233") ;
+    console.log ("checkout js file is loaded new gagaga667788") ;
 
-    if (!pollingInterval) {
-        pollingInterval = setInterval(pollForPaymentProcessed, 5000);
-      }
+    if (!$("#loader").is(":visible") && !$("#paymentIframe").length) {
+        if (!pollingInterval) {
+            console.log("Starting polling process");
+            pollingInterval = setInterval(pollForPaymentProcessed, 5000);
+        }
+    } else {
+        console.log("Loader is visible or Iframe is already loaded. Not starting polling.");
+    }
 
+    // if (!pollingInterval) {
+    //     console.log("Starting polling process"); 
+    //     pollingInterval = setInterval(pollForPaymentProcessed, 5000);
+    //   }
+
+   
     $('form.checkout').on('checkout_place_order', function(e) {
 
+        console.log("checkout_place_order event triggered 556688");
         // Check if mandatory fields are filled
         if (!areMandatoryFieldsFilled()) {
             e.preventDefault(); // Prevent the form from submitting
             alert('Please fill in all mandatory fields.');
+            window.location.reload();
             return false;
         }
+
+    
 
         e.preventDefault();
                 // Check if the loader is visible
@@ -55,6 +72,14 @@ jQuery(function($) {
 
     function pollForPaymentProcessed() {
         console.log ("Polling has started") ;
+
+        // Check if mandatory fields are filled
+    if (!areMandatoryFieldsFilled()) {
+        console.log("Mandatory fields are not filled. Polling halted.");
+        return; // Exit the function if mandatory fields are not filled
+    }
+
+    
         $.ajax({
             url: fintechwerx_params.ajax_url, // Ensure this is defined and correct
             type: 'POST',
@@ -77,6 +102,8 @@ jQuery(function($) {
             }
         });
     }
+
+
 
 
 
@@ -147,6 +174,36 @@ var globalTotal;
 // Rest of your existing code (newtranscallcustomer function, loadIframe function, etc.)
 //function newtranscallcustomer(orderId) {
 function newtranscallcustomer(orderId, subtotal, tax, total) {
+    console.log("inside function first orderId:", orderId);
+    var ajax_url = fintechwerx_params.ajax_url;
+
+    $.ajax({
+        url: ajax_url, // 'ajaxurl' is a global variable set by WordPress
+        type: 'POST',
+        data: {
+            'action': 'check_existing_cart_order_id',
+            'order_id': orderId
+        },
+        success: function(response) {
+            if (response.success && response.data.exists) {
+                console.log("Existing CartOrderId found: ", response.data.cartOrderId);
+                loadIframe(response.data.cartOrderId, total);
+            } else {
+                makeCustomerTransAPICall(orderId, subtotal, tax, total);
+            }
+        },
+        error: function() {
+            console.error("Error in checking existing CartOrderId.");
+            // Handle error
+        }
+    });
+}
+
+
+function makeCustomerTransAPICall(orderId, subtotal, tax, total) {
+    // Your existing AJAX call to fetch customerTransId
+    // ...
+
     console.log("inside function first orderId:",orderId);
     console.log("Subtotal:", subtotal, "Tax:", tax, "Total:", total);
     var cartOrderId = fintechwerx_params.CartOrderIdtrans;
@@ -155,7 +212,6 @@ function newtranscallcustomer(orderId, subtotal, tax, total) {
     globalTotal = total;
 
     
-
   
     // Access the dynamic values passed from PHP
     var customerMobileNumber = fintechwerx_params.customer_mobile_number;
@@ -163,10 +219,10 @@ function newtranscallcustomer(orderId, subtotal, tax, total) {
     var platform = fintechwerx_params.platform;
     var eCommWebsite = fintechwerx_params.eCommWebsite;
     var customerId = fintechwerx_params.customer_id;
-   
+    var ajax_url = fintechwerx_params.ajax_url;
 
      // Construct the URL with the dynamic customerId
-     var url = "https://api-qa.fintechwerx.com/ftw/public/MerchantCustomer/" + customerId + "/customertrans";
+     var url = "https://api.fintechwerx.com/ftw/public/MerchantCustomer/" + customerId + "/customertrans";
 
 
      console.log("merchantId:",merchantId);
@@ -205,24 +261,117 @@ function newtranscallcustomer(orderId, subtotal, tax, total) {
             ]
             // Add other necessary fields
         }),
-        success: function(response) {
-            // Assuming response contains customertransid
-            console.log("AJAX Response sucess:", response);
-            var customerTransId = response.CartOrderId;
-            globalCustomerTransId = response.CartOrderId;
-            console.log("after success response",customerTransId);
-          //  loadIframe(customerTransId);
-            loadIframe(customerTransId, total);
-        },
-        error: function() {
-            console.log("AJAX Response error:", response);
-            console.error('Error fetching customertransid.');
-            console.log("in the error function of the customer trans",customerTransId);
+        complete: function(xhr, textStatus) {
+            // textStatus can be "success", "notmodified", "nocontent", "error", "timeout", "abort", or "parsererror"
+
+            
+    
+            try {
+                var response = JSON.parse(xhr.responseText);
+               if (xhr.status === 200) {
+                    // Handle successful response
+
+                    var customerTransId = response.CartOrderId;
+                    globalCustomerTransId = response.CartOrderId;
+
+                    if (response.code === 1014) {
+                        // Handle successful response
+    
+                        alert(' Payment Failed. \n Failure Reason: ' + response.message);
+                        window.location.reload();
+                        // Further handling based on response content
+                    } else if (response.code === 1018) {
+                        // Handle specific error scenario
+                       // alert('Please try again: ' + response.message);
+                       alert(' Payment Failed. \n Failure Reason: ' + response.message);
+                       window.location.reload();
+                       // alert(' Please Try again. \n Failure Reason: ' + response.message);
+                    } else if (response.code === 404) {
+                        // Handle specific error scenario
+                       // alert('Error 404: ' + response.message);
+                        alert(' Payment Failed. \n Failure Reason: ' + response.message);
+                        window.location.reload();
+                    } else {
+                        // Handle other error scenarios
+                       // alert('Error: ' + response.message);
+                       console.log('Successful response for customer trans:', response);
+                       $.ajax({
+                        url: ajax_url,
+                        method: "POST",
+                        data: {
+                            'action': 'save_cart_order_id',
+                            'order_id': orderId,
+                            'cart_order_id': customerTransId // Assuming this is the ID you received from the API
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                console.log('CartOrderId saved successfully');
+                            } else {
+                                console.error('Error saving CartOrderId');
+                            }
+                        },
+                        error: function() {
+                            console.error('AJAX error while saving CartOrderId');
+                        }
+                    });
+                        loadIframe(customerTransId, total);
+
+                    }
+                }
+            } catch (e) {
+                if (xhr.status === 200) {
+                    // Handle successful response
+
+                    if (response.code === 1014) {
+                        // Handle successful response
+    
+                        alert(' Payment Failed. \n Failure Reason: ' + response.message);
+                        window.location.reload();
+                        // Further handling based on response content
+                    } else if (response.code === 1018) {
+                        // Handle specific error scenario
+                       // alert('Please try again: ' + response.message);
+                       alert(' Payment Failed. \n Failure Reason: ' + response.message);
+                       window.location.reload();
+                       // alert(' Please Try again. \n Failure Reason: ' + response.message);
+                    } else if (response.code === 404) {
+                        // Handle specific error scenario
+                       // alert('Error 404: ' + response.message);
+                        alert(' Payment Failed. \n Failure Reason: ' + response.message);
+                        window.location.reload();
+                    } else {
+                        // Handle other error scenarios
+                       // alert('Error: ' + response.message);
+                       console.log('Successful response for customer trans:', response);
+                       $.ajax({
+                        url: ajax_url,
+                        method: "POST",
+                        data: {
+                            'action': 'save_cart_order_id',
+                            'order_id': orderId,
+                            'cart_order_id': customerTransId // Assuming this is the ID you received from the API
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                console.log('CartOrderId saved successfully');
+                            } else {
+                                console.error('Error saving CartOrderId');
+                            }
+                        },
+                        error: function() {
+                            console.error('AJAX error while saving CartOrderId');
+                        }
+                    });
+                        loadIframe(customerTransId, total);
+                    }
+                }
+                alert('An error occurred during the request.');
+                window.location.reload();
+            }
         }
+       
     });
-
 }
-
 //function loadIframe(customerTransId) {
 function loadIframe(customerTransId, total) {
 
@@ -239,7 +388,7 @@ function loadIframe(customerTransId, total) {
 
     
         // Construct the dynamic iframe URL
-        var iframeUrl = "https://qa-public-pay.fintechwerx.com/#/?customerId=" + customerId +
+        var iframeUrl = "https://public-pay.fintechwerx.com/#/?customerId=" + customerId +
             "&ftwMerchantId=" + merchantId +
             "&CartOrderId=" + customerTransId +
             "&MobileNumber=" + customerMobileNumber +
@@ -376,4 +525,5 @@ function completePayment(paymentData) {
 }
 
 });
+})(jQuery);
 

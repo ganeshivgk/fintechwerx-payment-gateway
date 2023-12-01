@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function get_access_token() {
 
-    $url = 'https://api-qa.fintechwerx.com/ftw/public/token';
+    $url = 'https://api.fintechwerx.com/ftw/public/token';
 
     $response = wp_remote_get($url);
 

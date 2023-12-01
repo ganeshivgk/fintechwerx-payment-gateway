@@ -1,6 +1,6 @@
 <?php
 
-$fintech_base_url = "api-qa.fintechwerx.com" ;
+$fintech_base_url = "api.fintechwerx.com" ;
 
 function get_customer_args($existing_customer_id, $customer_mobile_number, $merchandID, $cart_order_id, $order, $platform, $eCommWebsite){
    return [
@@ -132,7 +132,7 @@ function verify_customer_age($customerId, $merchantId, $customerEmail, $first_na
 function call_ftw_apipg() {
     $user_id = get_current_user_id();
 
-    echo '<script>console.log("This is for testing call ftw apipg one ");</script>';
+    echo '<script>console.log("This is for testing call ftw apipg one call start 858585 ");</script>';
    
     if ($user_id <= 0) {
         return 'User not logged in';
@@ -166,7 +166,7 @@ function call_ftw_apipg() {
     }
   
 
-    $api_url = 'https://api-qa.fintechwerx.com/ftw/public/merchant/get-merchant-subscription';
+    $api_url = 'https://api.fintechwerx.com/ftw/public/merchant/get-merchant-subscription';
     $response = wp_remote_request($api_url, array(
         'method'    => 'POST',
         'headers'   => array('Content-Type' => 'application/json; charset=utf-8'),
@@ -191,43 +191,33 @@ function call_ftw_apipg() {
     // Check if the response status code is not 200
     $response_code = wp_remote_retrieve_response_code($response);
     echo '<script>console.log("This is for testing call ftw apipg one before repobse  ");</script>';
-    // if ($response_code != 200) {
-    //     $error_message = wp_remote_retrieve_response_message($response);
-    //     echo "<script type='text/javascript'>
-    //             alert('Please Try again Later. \\n Failure Reason: " . esc_js($error_message) . "');
-    //           </script>";
-    //     return;
-    // }
-
-    // if ($response_code != 200) {
-    //     $body = wp_remote_retrieve_body($response);
-    //     $data = json_decode($body, true);
     
-    //     if (is_array($data) && isset($data['message'])) {
-    //         $error_message = $data['message'];
-    //     } else {
-    //         $error_message = 'Unknown error occurred.';
-    //     }
-    
-    //     echo "<script type='text/javascript'>
-    //             alert('Please Try again Later. \\n Failure Reason: " . esc_js($error_message) . "');
-    //           </script>";
-    //     return;
-    // }
 
     $body = wp_remote_retrieve_body($response);
     $data = json_decode($body, true);
-  
+
+
+
     if (!is_array($data) || !isset($data['ageVerificationResponse'])) {
         error_log('Unexpected FTW API Response: ' . $body);
         return 'Unexpected API response';
     }
-  
-    if (!empty($data['ageVerificationResponse']['ftwCustomerId']) && empty($ftwCustomerId)) {
+
+    // Retrieve the existing ftwCustomerId, if any
+    $existingFtwCustomerId = get_user_meta($user_id, 'ftwCustomerId', true);
+
+    // Check if the new ftwCustomerId from the response is different from the existing one
+    if (!empty($data['ageVerificationResponse']['ftwCustomerId']) && 
+        $data['ageVerificationResponse']['ftwCustomerId'] != $existingFtwCustomerId) {
+        // Update the ftwCustomerId if it is different
         update_user_meta($user_id, 'ftwCustomerId', sanitize_text_field($data['ageVerificationResponse']['ftwCustomerId']));
+        echo '<script>console.log("Updated ftwCustomerId for user.");</script>';
+    } else {
+        echo '<script>console.log("No need to update ftwCustomerId.");</script>';
     }
-  
+
     return $data;
+  
 }
 
 
